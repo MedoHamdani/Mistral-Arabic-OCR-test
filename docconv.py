@@ -20,7 +20,12 @@ resp = client.ocr.process(
     include_image_base64=True,
 )
 
-for page in resp.pages:
-    reshaped_text = arabic_reshaper.reshape(page.markdown)
-    bidi_text = get_display(reshaped_text)
-    print(bidi_text)
+with open("output.md", "w", encoding="utf-8") as out_file:
+    for page in resp.pages:
+        # Save original (logical) text to file - this works for copy-pasting/documents
+        out_file.write(page.markdown + "\n\n")
+
+        # Reshape for terminal display only - this works for viewing in the console
+        reshaped_text = arabic_reshaper.reshape(page.markdown)
+        bidi_text = get_display(reshaped_text)
+        print(bidi_text)
