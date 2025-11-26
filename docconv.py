@@ -1,5 +1,9 @@
 import base64
+import sys
+sys.stdout.reconfigure(encoding='utf-8')
 from mistralai import Mistral
+import arabic_reshaper
+from bidi.algorithm import get_display
 
 with open("document.pdf", "rb") as f:
     pdf_bytes = f.read()
@@ -17,4 +21,6 @@ resp = client.ocr.process(
 )
 
 for page in resp.pages:
-    print(page.markdown)
+    reshaped_text = arabic_reshaper.reshape(page.markdown)
+    bidi_text = get_display(reshaped_text)
+    print(bidi_text)
